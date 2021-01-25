@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import openpyxl
 import random
+import os
 
 # 데이터 읽어와 리스트에 넣기
 def read_xlsx(sheet):
@@ -17,8 +18,8 @@ def read_xlsx(sheet):
 if __name__ == '__main__':
 
     # 엑셀파일 열기
-    file = "/Users/skan/PycharmProjects/Voca/Voca_ETS.xlsx"
-    book = openpyxl.load_workbook(filename= file, read_only=False, data_only=False )
+    file = os.getcwd() + "/voca.xlsx"
+    book = openpyxl.load_workbook(filename=file, read_only=False, data_only=False)
 
     # sheet1 불러오기
     # 데이터 읽어와 리스트에 넣기
@@ -34,7 +35,7 @@ if __name__ == '__main__':
 
     q_list = random.sample(range(0, len(data)), 10)
 
-    while(count < 3):
+    while(count < 5):
         print("\n")
         count += 1
 
@@ -74,8 +75,9 @@ if __name__ == '__main__':
             data[i][2] += 1
 
     # 테스트 종료
-    print("%d개를 맞추었습니다." %(score))
+    print("\n\n%d개를 맞추었습니다." %(score))
     print("당신의 점수는", "%.2f" %((score*100)/count) + "점 입니다.")
+    x = input("\n\nEnter 누르면 종료됩니다.")
 
     # update 엑셀
     for n in range(1, len(data)):
