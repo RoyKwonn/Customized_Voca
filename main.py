@@ -3,7 +3,7 @@ import openpyxl
 import random
 import os
 from operator import itemgetter
-
+import datetime
 
 # 데이터 읽어와 리스트에 넣기
 def read_xlsx():
@@ -17,9 +17,17 @@ def read_xlsx():
     data = []
     for row in sheet1.rows:
         word = []
-        for j in range(2):
+        for j in range(2): # 단어, 뜻
             word.append(row[j].value)
-        word.append(int(row[2].value))
+        if row[2].value is None:
+            word.append(int(5)) # default 가중치
+        else:
+            word.append(int(row[2].value)) # 가중치 입력
+
+        if row[3].value is None:
+            word.append(datetime.datetime.now())
+        else:
+            word.append(row[3].value) # 날짜
         data.append(word)
 
     book.close()
@@ -35,11 +43,13 @@ def update_xlsx(data, max_rows):
         book.worksheets[0].cell(row=n, column=1).value = data[n - 1][0]
         book.worksheets[0].cell(row=n, column=2).value = data[n - 1][1]
         book.worksheets[0].cell(row=n, column=3).value = data[n - 1][2]
+        book.worksheets[0].cell(row=n, column=4).value = data[n - 1][3] #.strftime('%Y-%m-%d'))
 
     for n in range(len(data), len(data) - max_rows):
         book.worksheets[0].cell(row=n, column=1).value = ' '
         book.worksheets[0].cell(row=n, column=2).value = ' '
         book.worksheets[0].cell(row=n, column=3).value = ' '
+        book.worksheets[0].cell(row=n, column=4).value = ' '
 
     book.save(file)
 
@@ -111,6 +121,8 @@ if __name__ == '__main__':
     # 테스트
     count = 0
     max_rows = len(data)
+    mis_list = []
+
 
     while(count < q_num):
         print("\n")
@@ -132,30 +144,41 @@ if __name__ == '__main__':
         select.append(data[a[2]])
         random.shuffle(select)
 
+
         print(data[i][0])
         print("[1] " + select[0][1])
         print("[2] " + select[1][1])
         print("[3] " + select[2][1])
         print("[4] " + select[3][1])
+        print("<정답을 모르면 5를 누르시오>")
+        print()
         answer = int(input("번호 : ")) - 1
 
-        # 정답인 경우
-        if select[answer][1] == data[i][1]:
-            print("정답입니다!")
-            score += 1
-            # 가중치 변경
-            data[i][2] -= 1
-            # 만약, 가중치가 0이되어 지워야한다면
-            if data[i][2] < 1:
-                print(data.pop(i))
-                # 문제의 번호들을 shift한다.
-                for x in range(0, len(q_list)):
-                    q_list[x] -= 1
-
-        # 오답인 경우
-        else:
-            print("오답, 정답은 " + data[i][1])
+        if answer == 4:
+            print("모르시군요!\n정답 : " + data[i][1])
             data[i][2] += 1
+            mis_list.append(data[i])
+        else:
+            # 정답인 경우
+            if select[answer][1] == data[i][1]:
+                print("정답입니다!")
+                score += 1
+                # 가중치 변경
+                data[i][2] -= 1
+                # 만약, 가중치가 0이되어 지워야한다면
+                if data[i][2] < 1:
+                    print(data.pop(i))
+                    # 문제의 번호들을 shift한다.
+                    for x in range(0, len(q_list)):
+                        q_list[x] -= 1
+
+            # 오답인 경우
+            else:
+                print("오답, 정답은 " + data[i][1])
+                data[i][2] += 1
+                mis_list.append(data[i])
+
+
 
     # 테스트 종료
     print_score(score, count)
@@ -164,5 +187,9 @@ if __name__ == '__main__':
     data.sort(key=itemgetter(2), reverse=True)
 
     x = input("\n종료하고 싶으시면 Enter를 눌러주세요")
+
+    print("\n\n[틀리신 문제들의 목록]")
+    for x in mis_list:
+        print(x)
 
     update_xlsx(data, max_rows)
