@@ -43,7 +43,7 @@ def update_xlsx(data, max_rows):
         book.worksheets[0].cell(row=n, column=1).value = data[n - 1][0]
         book.worksheets[0].cell(row=n, column=2).value = data[n - 1][1]
         book.worksheets[0].cell(row=n, column=3).value = data[n - 1][2]
-        book.worksheets[0].cell(row=n, column=4).value = data[n - 1][3] #.strftime('%Y-%m-%d'))
+        book.worksheets[0].cell(row=n, column=4).value = data[n - 1][3] #datetime.datetime.strptime(str(data[n - 1][3]), '%Y-%m-%d').date()
 
     for n in range(len(data), len(data) - max_rows):
         book.worksheets[0].cell(row=n, column=1).value = ' '
