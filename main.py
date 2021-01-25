@@ -37,7 +37,11 @@ if __name__ == '__main__':
     q_num = int(input("몇 문제를 푸시겠습니까? : "))
     q_list = random.sample(range(0, len(data)), q_num)
 
+<<<<<<< HEAD
     while(count < q_num):
+=======
+    while(count < 5):
+>>>>>>> a9c9982234a168e3ee104bc6de673d9f77113fad
         print("\n")
         count += 1
 
@@ -79,6 +83,7 @@ if __name__ == '__main__':
     # 테스트 종료
     print("\n\n%d개를 맞추었습니다." %(score))
     print("당신의 점수는", "%.2f" %((score*100)/count) + "점 입니다.")
+    x = input("\n\nEnter 누르면 종료됩니다.")
 
     x = input("\n종료하고 싶으시면 Enter를 눌러주세요")
     # update 엑셀
