@@ -37,11 +37,8 @@ if __name__ == '__main__':
     q_num = int(input("몇 문제를 푸시겠습니까? : "))
     q_list = random.sample(range(0, len(data)), q_num)
 
-<<<<<<< HEAD
+
     while(count < q_num):
-=======
-    while(count < 5):
->>>>>>> a9c9982234a168e3ee104bc6de673d9f77113fad
         print("\n")
         count += 1
 
