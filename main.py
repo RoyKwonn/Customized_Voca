@@ -2,6 +2,18 @@
 import openpyxl
 import random
 
+# 데이터 읽어와 리스트에 넣기
+def read_xlsx(sheet):
+    data = []
+    for row in sheet.rows:
+        word = []
+        for j in range(2):
+            word.append(row[j].value)
+        word.append(int(row[2].value))
+        data.append(word)
+
+    return data
+
 if __name__ == '__main__':
 
     # 엑셀파일 열기
@@ -9,17 +21,8 @@ if __name__ == '__main__':
     book = openpyxl.load_workbook(filename= file, read_only=False, data_only=False )
 
     # sheet1 불러오기
-    sheet1 = book.worksheets[0]
-
-
     # 데이터 읽어와 리스트에 넣기
-    data = []
-    for row in sheet1.rows:
-        word = []
-        for j in range(2):
-            word.append(row[j].value)
-        word.append(int(row[2].value))
-        data.append(word)
+    data = read_xlsx(book.worksheets[0])
 
     max_rows = len(data)
     # 점수
