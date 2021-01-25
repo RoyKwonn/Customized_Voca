@@ -24,6 +24,7 @@ if __name__ == '__main__':
     # sheet1 불러오기
     # 데이터 읽어와 리스트에 넣기
     data = read_xlsx(book.worksheets[0])
+    book.close()
 
     max_rows = len(data)
     # 점수
@@ -37,7 +38,6 @@ if __name__ == '__main__':
     q_num = int(input("몇 문제를 푸시겠습니까? : "))
     q_list = random.sample(range(0, len(data)), q_num)
 
-
     while(count < q_num):
         print("\n")
         count += 1
@@ -50,6 +50,7 @@ if __name__ == '__main__':
         # 틀린 보기 만들기
 
         a = random.sample(range(0,len(data)),4)
+
         if i in a:
             a.remove(i)
         select.append(data[a[0]])
@@ -72,6 +73,9 @@ if __name__ == '__main__':
             data[i][2] -= 1
             if data[i][2] < 1:
                 print(data.pop(i))
+                for x in range(0, len(q_list)):
+                    q_list[x] -= 1
+
         # 오답인 경우
         else:
             print("오답, 정답은 " + data[i][1])
@@ -80,11 +84,14 @@ if __name__ == '__main__':
     # 테스트 종료
     print("\n\n%d개를 맞추었습니다." %(score))
     print("당신의 점수는", "%.2f" %((score*100)/count) + "점 입니다.")
-    x = input("\n\nEnter 누르면 종료됩니다.")
 
     x = input("\n종료하고 싶으시면 Enter를 눌러주세요")
+
     # update 엑셀
-    for n in range(1, len(data)):
+    file = os.getcwd() + "/voca.xlsx"
+    book = openpyxl.Workbook()
+
+    for n in range(1, (len(data) + 1)):
         book.worksheets[0].cell(row=n, column=1).value = data[n-1][0]
         book.worksheets[0].cell(row=n, column=2).value = data[n-1][1]
         book.worksheets[0].cell(row=n, column=3).value = data[n-1][2]
