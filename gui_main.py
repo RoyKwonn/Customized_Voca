@@ -132,23 +132,70 @@ def make_Selections(data):
 
 if __name__ == '__main__':
 
-    # 데이터 읽어와 리스트에 넣기
+    window = tk.Tk()
+
+    window.title("Customized Voca by Seokhwan-Kwon")
+    window.geometry("300x350+100+100")  # 가로x세로+위치+위치
+    window.resizable(False, False)  # 창 조절여부
+
+    word = "TEST WORD"
+    label = tk.Label(window, text=word, width=10, height=5, fg="red", font=("", 30))
+    label.pack()
+
+
+    # coun = 0
+
+    # def countUP():
+    # global count
+    #  count += 1
+    #   label.config(text=str(count))
+
+    # label = tkinter.Label(window, text="0")
+    # label.pack()
+
+    # button = tkinter.Button(window, text="1. 뜻", overrelief="solid", width=10, height=2, command=countUP, repeatdelay=1000, repeatinterval=100)
+    # button.pack()
+
+    def calc(event):
+        label.config(text="입력값 = " + str(entry.get()))
+
+
+    entry = tk.Entry(window)
+    entry.bind("<Return>", calc)
+    entry.pack()
+
+    # label = tkinter.Label(window)
+    # label.pack()
+
+    # frame = tk.Frame(window)
+    # frame.pack()
+    #
+    # def get_text():
+    #     print(text_entry1.get())
+    #     print(text_entry2.get())
+    # text_entry1 = tk.Entry(frame, width=30)
+    # text_entry1.insert(0, "insert first text")
+    # text_entry1.pack(pady=15)
+    #
+    # text_entry2 = tk.Entry(frame, width=25)
+    # text_entry2.insert(5, "insert second text")
+    # text_entry2.pack(pady=0)
+    #
+    # button= tk.Button(frame, text="Get Text", command=get_text)
+    # button.pack(pady=20)
+
+    window.mainloop()
+
+
+    # 데이터 읽어와 heapsort로 정렬한 다음 리스트에 넣기
     data = read_xlsx()
     data = heapSort(data)
 
     # 점수
     score = 0
 
-    # 몇 문제를 풀 것인지
-    q_num = int(input("몇 문제를 푸시겠습니까? : "))
-    #q_list = random.sample(range(0, len(data)), q_num)
-    q_list = [x for x in range(0, q_num)]
 
-    # q_list = [x for x in range(0, 2 * q_num // 3)]
-    # rand_q = random.sample(range(0, len(data)), q_num)
-    #
-    # for in_rand_q in rand_q:
-    #     if in_rand_q in q_list:
+    q_list = [x for x in range(0, q_num)]
 
     # 테스트
     count = 0
@@ -165,29 +212,19 @@ if __name__ == '__main__':
         # 보기
         select = make_Selections(data)
 
-        print("진행도 : [", end='')
-        for x in range(1, q_num):
-            if(x < count):
-                print("-", end='')
-            else:
-                print(" ", end='')
-        print("]\n")
-
-        print(data[i][0] + "\n")
-
-        #print("<모르면 5 입력>")
-        print("1) " + select[0][1])
-        print("2) " + select[1][1])
-        print("3) " + select[2][1])
-        print("4) " + select[3][1])
-        #
+        print(data[i][0])
+        print("[1] " + select[0][1])
+        print("[2] " + select[1][1])
+        print("[3] " + select[2][1])
+        print("[4] " + select[3][1])
+        print("<정답을 모르면 5를 누르시오>")
         print()
 
 
         answer = int(input("번호 : ")) - 1
 
         if answer == 4:
-            print("모르시군요!\n\n정답 : " + data[i][1])
+            print("모르시군요!\n정답 : " + data[i][1])
             data[i][2] += 1
             mis_list.append(data[i])
         else:
@@ -206,7 +243,7 @@ if __name__ == '__main__':
 
             # 오답인 경우
             else:
-                print("오답!\n\n정답: " + data[i][1])
+                print("오답!\n정답: " + data[i][1])
                 data[i][2] += 1
                 mis_list.append(data[i])
 
