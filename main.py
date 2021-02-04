@@ -63,6 +63,7 @@ def update_xlsx(data, max_rows):
         book.worksheets[0].cell(row=n, column=4).value = ' '
 
     book.save(file)
+    book.close()
 
 
 # 점수 표시
@@ -144,6 +145,7 @@ if __name__ == '__main__':
     #q_list = random.sample(range(0, len(data)), q_num)
     q_list = [x for x in range(0, q_num)]
 
+    # 일정량은 랜덤으로 출제?
     # q_list = [x for x in range(0, 2 * q_num // 3)]
     # rand_q = random.sample(range(0, len(data)), q_num)
     #
@@ -154,23 +156,21 @@ if __name__ == '__main__':
     count = 0
     max_rows = len(data)
     mis_list = []
+    progress = []
 
 
     while(count < q_num):
-        print("\n")
         count += 1
-
         i = q_list.pop()
 
         # 보기
         select = make_Selections(data)
 
-        print("진행도 : [", end='')
-        for x in range(1, q_num):
-            if(x < count):
-                print("-", end='')
-            else:
-                print(" ", end='')
+        print("\n\n\n진행도 : [", end='')
+        for x in progress:
+            print(x, end='')
+        for x in range(count, q_num):
+            print(" ", end='')
         print("]\n")
 
         print(data[i][0] + "\n")
@@ -186,14 +186,12 @@ if __name__ == '__main__':
 
         answer = int(input("번호 : ")) - 1
 
-        if answer == 4:
-            print("모르시군요!\n\n정답 : " + data[i][1])
-            data[i][2] += 1
-            mis_list.append(data[i])
-        else:
+
+        if answer < 4 and answer >= 0:
             # 정답인 경우
             if select[answer][1] == data[i][1]:
-                print("정답입니다!")
+                #print("정답입니다!")
+                progress.append('+')
                 score += 1
                 # 가중치 변경
                 data[i][2] -= 1
@@ -206,10 +204,17 @@ if __name__ == '__main__':
 
             # 오답인 경우
             else:
-                print("오답!\n\n정답: " + data[i][1])
+                print("정답: " + data[i][1])
+                progress.append('-')
                 data[i][2] += 1
                 mis_list.append(data[i])
 
+        # 정답을 모를경우 (아무거나 누를경우)
+        else:
+            print("정답 : " + data[i][1])
+            progress.append('-')
+            data[i][2] += 1
+            mis_list.append(data[i])
 
 
     # 테스트 종료
@@ -224,7 +229,7 @@ if __name__ == '__main__':
 
 
     if len(mis_list) == 0:
-        print("없습니다.")
+        print("축하합니다. 모두 맞추셨습니다.")
     else:
         i = 1
         for x in mis_list:
