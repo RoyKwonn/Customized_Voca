@@ -7,18 +7,112 @@
 
 # pip install inputimeout  // MIT
 # from inputimeout import inputimeout, TimeoutOccurred
-
+import openpyxl # for .xlsx
 import random
+import os   # for Path
 from operator import itemgetter
-import Heap_Sort
+import datetime
 import tkinter as tk
-import Excel_Module
+
+
+
+# 데이터 읽어와 리스트에 넣기
+def read_xlsx():
+    # 엑셀파일 열기
+    file = os.getcwd() + "/voca.xlsx"
+    book = openpyxl.load_workbook(filename=file, read_only=False, data_only=False)
+
+    # sheet1 불러오기
+    sheet1 = book.worksheets[0]
+
+    data = []
+    for row in sheet1.rows:
+        word = []
+        for j in range(2): # 단어, 뜻
+            word.append(row[j].value)
+        if row[2].value is None:
+            word.append(int(5)) # default 가중치
+        else:
+            word.append(int(row[2].value)) # 가중치 입력
+
+        if row[3].value is None:
+            word.append(datetime.datetime.now())
+        else:
+            word.append(row[3].value) # 날짜
+        data.append(word)
+
+    book.close()
+    return data
+
+
+# update 엑셀
+def update_xlsx(data, max_rows):
+    file = os.getcwd() + "/voca.xlsx"
+    book = openpyxl.Workbook()
+
+    for n in range(1, (len(data) + 1)):
+        book.worksheets[0].cell(row=n, column=1).value = data[n - 1][0]
+        book.worksheets[0].cell(row=n, column=2).value = data[n - 1][1]
+        book.worksheets[0].cell(row=n, column=3).value = data[n - 1][2]
+        book.worksheets[0].cell(row=n, column=4).value = data[n - 1][3] #datetime.datetime.strptime(str(data[n - 1][3]), '%Y-%m-%d').date()
+
+    for n in range(len(data), len(data) - max_rows):
+        book.worksheets[0].cell(row=n, column=1).value = ' '
+        book.worksheets[0].cell(row=n, column=2).value = ' '
+        book.worksheets[0].cell(row=n, column=3).value = ' '
+        book.worksheets[0].cell(row=n, column=4).value = ' '
+
+    book.save(file)
+    book.close()
+
 
 # 점수 표시
 def print_score(score, count, q_num):
     print("\n\n[결과]\n맞춘 문제 : %d\n총 : %d" % (score, q_num))
     print("당신의 점수는", "%.2f" % ((score * 100) / count) + "점 입니다.")
 
+
+# arr이라는 리스트, 전체 개수, 자식노드 중 큰거
+# To heapify subtree rooted at index i.
+# n is size of heap
+def heapify(data, n, i):
+    largest = i  # Initialize largest as root
+    l = 2 * i + 1  # left = 2*i + 1
+    r = 2 * i + 2  # right = 2*i + 2
+
+    # See if left child of root exists and is
+    # greater than root
+    if l < n and data[i][2] > data[l][2]:
+        largest = l
+
+        # See if right child of root exists and is
+    # greater than root
+    if r < n and data[largest][2] > data[r][2]:
+        largest = r
+
+        # Change root, if needed
+    if largest != i:
+        data[i], data[largest] = data[largest], data[i]  # swap
+
+        # Heapify the root.
+        heapify(data, n, largest)
+
+
+def heapSort(data):
+    n = len(data)
+
+    # Build a maxheap.
+    # Since last parent will be at ((n//2)-1) we can start at that location.
+    # n부터 -1_2_까지 -1_3_만큼 숫자간격을 좁혀서
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(data, n, i)
+
+    # One by one extract elements
+    for i in range(n - 1, 0, -1):
+        data[i], data[0] = data[0], data[i]  # swap
+        heapify(data, i, 0)
+
+    return data
 
 def make_Selections(data):
     select = []
@@ -40,8 +134,8 @@ def make_Selections(data):
 if __name__ == '__main__':
 
     # 데이터 읽어와 리스트에 넣기
-    data = Excel_Module.read_xlsx()
-    data = Heap_Sort.heapSort(data)
+    data = read_xlsx()
+    data = heapSort(data)
 
     # 점수
     score = 0
@@ -142,4 +236,4 @@ if __name__ == '__main__':
             print("%d." %(i), x)
             i += 1
 
-    Excel_Module.update_xlsx(data, max_rows)
+    update_xlsx(data, max_rows)
