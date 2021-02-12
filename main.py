@@ -10,8 +10,8 @@
 
 import random
 from operator import itemgetter
+from threading import Timer
 import Heap_Sort
-import tkinter as tk
 import Excel_Module
 
 # 점수 표시
@@ -35,6 +35,9 @@ def make_Selections(data):
     random.shuffle(select)
 
     return select
+
+def times_up():
+    print("time's up")
 
 
 if __name__ == '__main__':
@@ -88,9 +91,13 @@ if __name__ == '__main__':
         print("4) " + select[3][1])
         #
         print()
-
-
-        answer = int(input("번호 : ")) - 1
+        answer = 4 # default를 오답으로 주자.
+        timeout = 5
+        t = Timer(timeout, print, ["Sorry, time's up"])
+        t.start()
+        prompt = "You have %d seconds to choose the correct answer...\n" % timeout
+        answer = int(input(prompt)) - 1
+        t.cancel()
 
 
         if answer < 4 and answer >= 0:
