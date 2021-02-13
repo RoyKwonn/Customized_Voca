@@ -4,6 +4,8 @@
 # DB : pickle
 # 데이터 분석 : pandas
 
+# https://likegeeks.com/python-gui-examples-tkinter-tutorial/
+
 import tkinter as tk
 
 if __name__ == '__main__':
