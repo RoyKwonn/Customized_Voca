@@ -1,5 +1,5 @@
 import tkinter as tk
-import scrolledtext as st
+from tkinter import scrolledtext
 
 if __name__ == '__main__':
 
@@ -7,6 +7,7 @@ if __name__ == '__main__':
     window.title("Welcome to LikeGeeks app")
     window.geometry('350x200')
 
-    txt = st.Scr
+    txt = tk.scrolledtext.ScrolledText(window, width=40, height=10)
+    txt.grid(column=0, row=0)
 
     window.mainloop()
