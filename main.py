@@ -54,12 +54,6 @@ if __name__ == '__main__':
     #q_list = random.sample(range(0, len(data)), q_num)
     q_list = [x for x in range(0, q_num)]
 
-    # 일정량은 랜덤으로 출제?
-    # q_list = [x for x in range(0, 2 * q_num // 3)]
-    # rand_q = random.sample(range(0, len(data)), q_num)
-    #
-    # for in_rand_q in rand_q:
-    #     if in_rand_q in q_list:
 
     # 테스트
     count = 0
