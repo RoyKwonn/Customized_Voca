@@ -1,8 +1,16 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 
-import tkinter as tk
-import tkinter.ttk as ttk
+try:
+    import tkinter as tk            # python 3
+    import tkinter.ttk as ttk       # python 3
+except ImportError:
+    import Tkinter as tk            # python 2
+    import tkFont as tkfont         # python 2
+
+class SampleApp(tk.Tk):
+    
+
 
 if __name__ == '__main__':
 
